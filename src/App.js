@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+// Imports
 import { Motion, spring, StaggeredMotion, presets, TransitionMotion } from 'react-motion'
 import styled from 'styled-components'
 import logo from './logo.svg';
 import './App.css';
 
+// Styled Components
 const Nav = styled.nav`
   width: 100%;
   height: 50px;
@@ -36,6 +38,7 @@ const NavDrop = styled.div`
     margin-top: 85px;
   }
 `
+// Nesting
 const MenuToggle = styled.button`
   width: 40px;
   height: 40px;
@@ -49,7 +52,7 @@ const MenuToggle = styled.button`
     background: black;
   }
 `
-
+// Props
 const Title = styled.h1`
   position: relative;
   left: ${ props => props.left}px;
@@ -125,13 +128,21 @@ class App extends Component {
 
   getDefaultStyles = () => {
     return this.state.messages.map( ({id, text}) => (
-      {key: id, data: text, style: {height:0}}
+      {
+        key: id, 
+        data: text, 
+        style: {height:0}
+      }
     ))
   }
 
   getStyles = () => {
     const mapped = this.state.messages.map( ({id, text}) => (
-      { key: id, data: text, style: {height: spring(60, presets.gentle)} }
+      { 
+        key: id, 
+        data: text, 
+        style: {height: spring(60, presets.gentle)} 
+      }
     ))
     return mapped
   }
@@ -154,19 +165,29 @@ class App extends Component {
   }
 
   render() {
+    // Motion
+    // - Default Style height:0, opacity: 1
+    // - Style: height spring(100)
+    // - Controlled by state
+    // - Child Function
 
     return (
       <div className="App">
-        <Motion
-          defaultStyle={{height: 0, opacity: 1}}
-          style={{height: spring(this.state.menuOpen ? 600 : 0), opacity: 1}}>
-          { (style) => (
-            <div>
+          <div>
+            <Motion
+              defaultStyle={ {height: 0, opacity: 0}}
+              style={{height: spring(this.state.menuOpen ? 200 : 0, {precision: 0.05 }), opacity: spring(this.state.menuOpen? 1 : 0)}}>
 
-              <Nav>
+              { (style) => (
+
+              <div>
+
+                
+                <Nav>
                 React Motion
                 <div>Dropdown height is: {style.height} Opacity: {style.opacity} </div>
-                <MenuToggle onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
+                <MenuToggle 
+                  onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
                   <div></div>
                   <div></div>
                   <div></div>
@@ -176,44 +197,38 @@ class App extends Component {
               <NavDrop height={style.height} opacity={style.opacity}>
                 <h1> Surprise! </h1>
               </NavDrop>
+              </div>
 
+              )}
+              </Motion>
             </div>
-          )}
-        </Motion>
+
         <header className="App-header">
-          <StaggeredMotion
-            defaultStyles={[
-              {left: 1090},
-              {left: 1090},
-              {left: 1090}
-            ]}
-            styles={ (prevStyles) => [
-              {left: spring(0, {precision: 90, stiffness: 60, damping: 5 })},
-              {left: prevStyles[0].left},
-              {left: prevStyles[1].left}
-          ]}>
-          {(styles) => (
+          {/* Staggered motion
+          - default styles[array]
+          - styles - function(prevStyles) that returns an array */
+          /* TransitionMotion
+          defaultStyles={ this.getDefaultStyles() }
+          styles={ this.getStyles() }
+          willEnter={ this.willEnter }
+          willLeave={ this.willLeave }
+        > */}
+
+            
             <div>
-              <Logo left={styles[0].left} src={logo} className="App-logo" alt="logo" />
-              <Title left={styles[1].left} className="App-title">Welcome to React Motion</Title>
-              <Subtitle left={styles[2].left} className="App-title">Watch This Workshop Change Your Life</Subtitle>
+              <Logo left={0} src={logo} className="App-logo" alt="logo" />
+              <Title left={0} className="App-title">Welcome to React Motion</Title>
+              <Subtitle left={0} className="App-title">Watch This Workshop Change Your Life</Subtitle>
             </div>
-          )}
-          </StaggeredMotion>
+          
         </header>
         
         <form onSubmit={ this.handleSubmit }>
           <input type="text" value={ this.state.messageInput } onChange={ this.handleChange }/>
           <button type='submit'>Submit</button>
         </form>
-        <TransitionMotion
-          defaultStyles={ this.getDefaultStyles() }
-          styles={ this.getStyles() }
-          willEnter={ this.willEnter }
-          willLeave={ this.willLeave }
-        >
-          { this.listItems }
-        </TransitionMotion>
+        
+          {/* { this.listItems } */}
        
       </div>
     );
