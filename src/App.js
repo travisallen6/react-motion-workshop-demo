@@ -101,6 +101,13 @@ class App extends Component {
     })
   }
 
+  deleteMessage = (key) => {
+    const newMessages = this.state.messages.filter( ({id}) => id != key)
+    this.setState({
+      messages: newMessages
+    })
+  }
+
   handleSubmit = (e) => {
     const { messages, messageInput, currentId } = this.state
     e.preventDefault();
@@ -131,7 +138,7 @@ class App extends Component {
 
   getStyles = () => {
     const mapped = this.state.messages.map( ({id, text}) => (
-      { key: id, data: text, style: {height: spring(60, presets.gentle)} }
+      { key: id, data: text, style: {height: spring(60)} }
     ))
     return mapped
   }
@@ -139,7 +146,8 @@ class App extends Component {
   listItems = (styles) => {
     const styledList = styles.map( ({key, data, style}) => {
       return (
-        <Message 
+        <Message
+          onClick={ () => this.deleteMessage(key) } 
           height={ style.height } key={ key } >
             { data }
         </Message>
